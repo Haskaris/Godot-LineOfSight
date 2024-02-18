@@ -171,7 +171,7 @@ void LineOfSight2D::draw_line_of_sight()
 
   for (int i = 0; i <= step_count; i++)
   {
-    double current_angle = rotation_deg - (angle / 2.0 + step_size * i);
+    double current_angle = rotation_deg - (angle / 2.0) + (step_size * i);
     ViewCastInfo view_cast_info = view_cast(current_angle);
 
     if (i > 0)
