@@ -1,0 +1,44 @@
+AlignAfterOpenBracket: BlockIndent
+UseTab: Never
+TabWidth: 2
+SpacesInParensOptions: {}
+ColumnLimit: 100
+BreakStringLiterals: true
+IndentWidth: 2
+InsertNewlineAtEOF: true
+Language: Cpp
+BreakBeforeBraces: Attach
+AllowAllParametersOfDeclarationOnNextLine: true
+IndentCaseBlocks: true
+IndentCaseLabels: true
+AlignEscapedNewlines: Left
+AlignOperands: AlignAfterOperator
+AllowShortBlocksOnASingleLine: Empty
+SpaceBeforeParens: ControlStatements
+AllowShortLambdasOnASingleLine: Empty
+LambdaBodyIndentation: Signature
+NamespaceIndentation: All
+SpaceBeforeCpp11BracedList: true
+AllowShortLoopsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortEnumsOnASingleLine: false
+SortUsingDeclarations: LexicographicNumeric
+SortIncludes: CaseSensitive
+IndentPPDirectives: BeforeHash
+AlignConsecutiveMacros:
+  Enabled: true
+AlignConsecutiveDeclarations:
+  Enabled: false
+AlignConsecutiveAssignments:
+  Enabled: false
+AlignArrayOfStructures: Left
+KeepEmptyLinesAtEOF: true
+SpaceBeforeInheritanceColon: true
+SpacesBeforeTrailingComments: 2
+SpacesInAngles: Never
+SpacesInParens: Never
+AlignConsecutiveBitFields:
+  Enabled: false
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
+AlignTrailingComments: {}
