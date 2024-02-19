@@ -107,8 +107,8 @@ LineOfSight2D::ViewCastInfo LineOfSight2D::view_cast(const double p_angle) {
   Vector2 local_from =
       Vector2(get_distance_from_origin() * cos_angle, get_distance_from_origin() * sin_angle);
   Vector2 local_to = Vector2(get_radius() * cos_angle, get_radius() * sin_angle);
-  Vector2 from = to_global(local_from);
-  Vector2 to = to_global(local_to);
+  Vector2 from = local_from + get_global_position();
+  Vector2 to = local_to + get_global_position();
   Ref<PhysicsRayQueryParameters2D> parameters = PhysicsRayQueryParameters2D::create(from, to);
 
   Dictionary dict = get_world_2d()->get_direct_space_state()->intersect_ray(parameters);
