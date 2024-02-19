@@ -13,8 +13,10 @@ script = ExtResource("1_kuoit")
 texture = ExtResource("1_7vs8i")
 
 [node name="LineOfSight2D" type="LineOfSight2D" parent="."]
+radius = 400.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_ttwqu")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
