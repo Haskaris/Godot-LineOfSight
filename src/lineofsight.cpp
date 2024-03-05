@@ -1,4 +1,5 @@
 #include "lineofsight.h"
+#include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/core/class_db.hpp>
 
 using namespace godot;
@@ -64,6 +65,8 @@ void LineOfSight2D::_bind_methods() {
       "LineOfSight2D", PropertyInfo(Variant::FLOAT, "radius", PROPERTY_HINT_RANGE, "0,9999,0.1"),
       "set_radius", "get_radius"
   );
+
+  ClassDB::bind_method(D_METHOD("get_mesh_creation_time"), &LineOfSight2D::get_mesh_creation_time);
 }
 
 LineOfSight2D::LineOfSight2D() {
@@ -73,12 +76,17 @@ LineOfSight2D::LineOfSight2D() {
   distance_from_origin = 10;
   angle = 90;
   radius = 100;
+
+  mesh_creation_time = 0;
+  Callable mesh_creation_callable = Callable(this, StringName("get_mesh_creation_time"));
+  performance = Performance::get_singleton();
+  performance->add_custom_monitor(StringName("draw_time"), mesh_creation_callable);
 }
 
 LineOfSight2D::~LineOfSight2D() {
-  // Clean up the MeshInstance2D.
   // mesh->queue_free();
   // mesh = nullptr;
+  performance = nullptr;
 }
 
 void LineOfSight2D::_enter_tree() {
@@ -96,7 +104,14 @@ void LineOfSight2D::_exit_tree() {
   mesh->queue_free();
 }
 
-void LineOfSight2D::_process(double delta) { draw_line_of_sight(); }
+void LineOfSight2D::_process(double delta) {
+  // create timer to measure the time it takes to draw the line of sight.
+  Time *time = Time::get_singleton();
+  double start_time = time->get_unix_time_from_system();
+  draw_line_of_sight();
+  double end_time = time->get_unix_time_from_system();
+  set_mesh_creation_time(end_time - start_time);
+}
 
 /// @brief Create a raycast from the center of the circle to the point at the given angle.
 /// @param p_angle The angle at which to cast the ray in degrees.
@@ -250,3 +265,7 @@ double LineOfSight2D::get_angle() const { return angle; }
 void LineOfSight2D::set_radius(double value) { radius = value; }
 
 double LineOfSight2D::get_radius() const { return radius; }
+
+void LineOfSight2D::set_mesh_creation_time(double value) { mesh_creation_time = value; }
+
+double LineOfSight2D::get_mesh_creation_time() const { return mesh_creation_time; }

@@ -3,12 +3,12 @@
 
 #include <corecrt_math_defines.h>
 
+#include <godot_cpp/classes/mesh_instance2d.hpp>
+#include <godot_cpp/classes/performance.hpp>
 #include <godot_cpp/classes/physics_direct_space_state2d.hpp>
 #include <godot_cpp/classes/physics_ray_query_parameters2d.hpp>
-#include <godot_cpp/classes/world2d.hpp>
-
-#include <godot_cpp/classes/mesh_instance2d.hpp>
 #include <godot_cpp/classes/surface_tool.hpp>
+#include <godot_cpp/classes/world2d.hpp>
 
 #include <godot_cpp/classes/node2d.hpp>
 
@@ -67,6 +67,8 @@ namespace godot {
     double angle;                    // The angle of the LOS.
     double radius;                   // The radius of the LOS (how far).
 
+    double mesh_creation_time;
+    Performance *performance;
     MeshInstance2D *mesh;
 
   public:
@@ -87,6 +89,9 @@ namespace godot {
 
     void set_radius(const double p_radius);
     double get_radius() const;
+
+    void set_mesh_creation_time(const double p_mesh_creation_time);
+    double get_mesh_creation_time() const;
 
   private:
     ViewCastInfo view_cast(const double p_angle);
