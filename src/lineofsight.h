@@ -67,8 +67,9 @@ namespace godot {
     double angle;                    // The angle of the LOS.
     double radius;                   // The radius of the LOS (how far).
 
-    double mesh_creation_time;
-    Performance *performance;
+    double mesh_creation_time;  // The time it takes to create the mesh.
+    Performance *performance;   // The performance monitor.
+
     MeshInstance2D *mesh;
 
   public:

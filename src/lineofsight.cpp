@@ -72,15 +72,17 @@ void LineOfSight2D::_bind_methods() {
 LineOfSight2D::LineOfSight2D() {
   resolution = 1;
   edge_resolve_iterations = 5;
-  edge_distance_threshold = 0.5;
-  distance_from_origin = 10;
+  edge_distance_threshold = 10;
+  distance_from_origin = 60;
   angle = 90;
   radius = 100;
 
   mesh_creation_time = 0;
   Callable mesh_creation_callable = Callable(this, StringName("get_mesh_creation_time"));
   performance = Performance::get_singleton();
-  performance->add_custom_monitor(StringName("draw_time"), mesh_creation_callable);
+  if (!performance->has_custom_monitor(StringName("draw_time"))) {
+    performance->add_custom_monitor(StringName("draw_time"), mesh_creation_callable);
+  }
 }
 
 LineOfSight2D::~LineOfSight2D() {
@@ -92,25 +94,27 @@ LineOfSight2D::~LineOfSight2D() {
 void LineOfSight2D::_enter_tree() {
   mesh = new MeshInstance2D();
   draw_line_of_sight();
-  // Set the color of the circle to red.
   mesh->set_modulate(Color(1, 0, 0));
-  // Add the MeshInstance2D as a child of this node.
   add_child(mesh);
+
+  // Required to make the mesh render correctly (don't overturn the mesh when the parent rotates)
+  mesh->set_as_top_level(true);
 }
 
 void LineOfSight2D::_exit_tree() {
-  // Remove the MeshInstance2D from this node.
   remove_child(mesh);
   mesh->queue_free();
 }
 
 void LineOfSight2D::_process(double delta) {
-  // create timer to measure the time it takes to draw the line of sight.
   Time *time = Time::get_singleton();
   double start_time = time->get_unix_time_from_system();
   draw_line_of_sight();
   double end_time = time->get_unix_time_from_system();
   set_mesh_creation_time(end_time - start_time);
+
+  // Because the mesh is detached from the parent, we need to update its position manually.
+  mesh->set_global_position(get_global_position());
 }
 
 /// @brief Create a raycast from the center of the circle to the point at the given angle.
@@ -167,21 +171,21 @@ LineOfSight2D::find_edge(ViewCastInfo p_min_view_cast, ViewCastInfo p_max_view_c
   return EdgeInfo(min_point, max_point);
 }
 
+/// @brief Draw the line of sight by casting rays and drawing lines between the points.
 void LineOfSight2D::draw_line_of_sight() {
-  int step_count = angle * resolution;
-  double step_size = angle / step_count;
-
   List<Vector2> view_points_from = List<Vector2>();
   List<Vector2> view_points_to = List<Vector2>();
-
   ViewCastInfo old_view_cast_info = ViewCastInfo();
 
+  int step_count = angle * resolution;
+  double step_size = angle / step_count;
   double rotation_deg = get_global_rotation_degrees();
 
   for (int i = 0; i <= step_count; i++) {
     double current_angle = rotation_deg - (angle / 2.0) + (step_size * i);
     ViewCastInfo view_cast_info = view_cast(current_angle);
 
+    // If we already have a previous view cast, check if the current view cast is different.
     if (i > 0) {
       bool edge_distance_threshold_exceeded =
           Math::abs(old_view_cast_info.distance - view_cast_info.distance) >
@@ -192,54 +196,36 @@ void LineOfSight2D::draw_line_of_sight() {
       if (diff_hit || (both_hit && edge_distance_threshold_exceeded)) {
         EdgeInfo edge = find_edge(old_view_cast_info, view_cast_info);
         if (edge.point_A != Vector2(0, 0)) {
-          view_points_to.push_back(to_local(edge.point_A));
+          view_points_from.push_back(view_cast_info.origin - get_global_position());
+          view_points_to.push_back(edge.point_A - get_global_position());
         }
         if (edge.point_B != Vector2(0, 0)) {
-          view_points_to.push_back(to_local(edge.point_B));
+          view_points_from.push_back(view_cast_info.origin - get_global_position());
+          view_points_to.push_back(edge.point_B - get_global_position());
         }
       }
     }
 
-    // Add the origin of the raycast to the list of view points
-    view_points_from.push_back(view_cast_info.origin);
-
-    // Add the point at which the raycast hit to the list of view points.
-    Vector2 local_point = to_local(view_cast_info.point);
-    view_points_to.push_back(local_point);
+    view_points_from.push_back(view_cast_info.origin - get_global_position());
+    view_points_to.push_back(view_cast_info.point - get_global_position());
 
     old_view_cast_info = view_cast_info;
   }
 
   int vertex_count = view_points_to.size() + 1;
-  Vector2 *vertices = new Vector2[vertex_count];
-  int *triangles = new int[(vertex_count - 2) * 3];
-
   SurfaceTool *st = new SurfaceTool();
-  st->begin(Mesh::PRIMITIVE_TRIANGLES);
-
-  vertices[0] = Vector2(0, 0);
-  st->add_vertex(Vector3(0, 0, 0));
+  st->begin(Mesh::PRIMITIVE_TRIANGLE_STRIP);
 
   for (int i = 0; i < vertex_count - 1; i++) {
-    vertices[i + 1] = view_points_to[i];
+    // Add two vertices to the SurfaceTool for each view point.
+    st->add_vertex(Vector3(view_points_from[i].x, view_points_from[i].y, 0));
     st->add_vertex(Vector3(view_points_to[i].x, view_points_to[i].y, 0));
-
-    if (i < vertex_count - 2) {
-      triangles[i * 3] = 0;
-      triangles[i * 3 + 1] = i + 1;
-      triangles[i * 3 + 2] = i + 2;
-      st->add_index(0);
-      st->add_index(i + 1);
-      st->add_index(i + 2);
-    }
   }
 
-  st->generate_normals();
   Ref<ArrayMesh> m = st->commit();
   mesh->set_mesh(m);
 }
 
-// Getter and setter methods for private properties
 void LineOfSight2D::set_resolution(double value) { resolution = value; }
 
 double LineOfSight2D::get_resolution() const { return resolution; }
