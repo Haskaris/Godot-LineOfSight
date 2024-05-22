@@ -1,0 +1,31 @@
+[gd_scene load_steps=6 format=3 uid="uid://dafbrgu0g7vfx"]
+
+[ext_resource type="PackedScene" uid="uid://jl67a3kd4xlw" path="res://3D/player_3d.tscn" id="1_62mdo"]
+[ext_resource type="PackedScene" uid="uid://cjklsgr5vfx23" path="res://3D/block_3d.tscn" id="2_qhmny"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mx2uc"]
+
+[sub_resource type="Sky" id="Sky_g4nyj"]
+sky_material = SubResource("ProceduralSkyMaterial_mx2uc")
+
+[sub_resource type="Environment" id="Environment_4tms7"]
+background_mode = 2
+sky = SubResource("Sky_g4nyj")
+
+[node name="Main3d" type="Node3D"]
+
+[node name="Floor" type="CSGBox3D" parent="."]
+use_collision = true
+size = Vector3(15, 0.5, 15)
+
+[node name="Player3d" parent="." instance=ExtResource("1_62mdo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="Block3d" parent="." instance=ExtResource("2_qhmny")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.84516, 1.05514, -1.67481)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_4tms7")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(0.776717, -0.473147, -0.415743, 0.629849, 0.583475, 0.512686, 0, -0.660067, 0.751207, 0, 0, 0)
