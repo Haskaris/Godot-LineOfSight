@@ -1,37 +1,37 @@
-#ifndef LINEOFSIGHT_2D_H
-#define LINEOFSIGHT_2D_H
+#ifndef LINEOFSIGHT_3D_H
+#define LINEOFSIGHT_3D_H
 
-#include <godot_cpp/classes/mesh_instance2d.hpp>
+#include <godot_cpp/classes/mesh_instance3d.hpp>
 #include <godot_cpp/classes/performance.hpp>
-#include <godot_cpp/classes/physics_direct_space_state2d.hpp>
-#include <godot_cpp/classes/physics_ray_query_parameters2d.hpp>
+#include <godot_cpp/classes/physics_direct_space_state3d.hpp>
+#include <godot_cpp/classes/physics_ray_query_parameters3d.hpp>
 #include <godot_cpp/classes/surface_tool.hpp>
-#include <godot_cpp/classes/world2d.hpp>
+#include <godot_cpp/classes/world3d.hpp>
 
-#include <godot_cpp/classes/node2d.hpp>
+#include <godot_cpp/classes/node3d.hpp>
 
 using namespace godot;
 
-class LineOfSight2D : public Node2D {
-  GDCLASS(LineOfSight2D, Node2D)
+class LineOfSight3D : public Node3D {
+  GDCLASS(LineOfSight3D, Node3D)
 
 public:
   struct ViewCastInfo {
     bool hit;         // Whether the ray hit an obstacle.
-    Vector2 origin;   // The origin of the ray.
-    Vector2 point;    // The point at which the ray hit the obstacle.
+    Vector3 origin;   // The origin of the ray.
+    Vector3 point;    // The point at which the ray hit the obstacle.
     double distance;  // The distance from the origin to the point.
     double angle;     // The angle at which the ray was cast in degrees.
 
     ViewCastInfo() {
       hit = false;
-      origin = Vector2();
-      point = Vector2();
+      origin = Vector3();
+      point = Vector3();
       distance = 0;
       angle = 0;
     }
 
-    ViewCastInfo(bool p_hit, Vector2 p_origin, Vector2 p_point, double p_distance, double p_angle) {
+    ViewCastInfo(bool p_hit, Vector3 p_origin, Vector3 p_point, double p_distance, double p_angle) {
       hit = p_hit;
       origin = p_origin;
       point = p_point;
@@ -41,15 +41,15 @@ public:
   };
 
   struct EdgeInfo {
-    Vector2 point_A;
-    Vector2 point_B;
+    Vector3 point_A;
+    Vector3 point_B;
 
     EdgeInfo() {
-      point_A = Vector2();
-      point_B = Vector2();
+      point_A = Vector3();
+      point_B = Vector3();
     }
 
-    EdgeInfo(Vector2 p_point_A, Vector2 p_point_B) {
+    EdgeInfo(Vector3 p_point_A, Vector3 p_point_B) {
       point_A = p_point_A;
       point_B = p_point_B;
     }
@@ -66,7 +66,7 @@ private:
   double mesh_creation_time;  // The time it takes to create the mesh.
   Performance *performance;   // The performance monitor.
 
-  MeshInstance2D *mesh;
+  MeshInstance3D *mesh;
 
 public:
   void set_resolution(const double p_resolution);
@@ -98,8 +98,8 @@ protected:
   static void _bind_methods();
 
 public:
-  LineOfSight2D();
-  ~LineOfSight2D();
+  LineOfSight3D();
+  ~LineOfSight3D();
 
   void _enter_tree() override;
   void _exit_tree() override;

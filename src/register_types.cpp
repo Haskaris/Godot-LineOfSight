@@ -1,6 +1,7 @@
 #include "register_types.h"
 
 #include "lineofsight2d.h"
+#include "lineofsight3d.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -14,6 +15,7 @@ void initialize_line_of_sight_module(ModuleInitializationLevel p_level) {
   }
 
   ClassDB::register_class<LineOfSight2D>();
+  ClassDB::register_class<LineOfSight3D>();
 }
 
 void uninitialize_line_of_sight_module(ModuleInitializationLevel p_level) {
