@@ -6,29 +6,29 @@ GDExtension for Godot Engine that provides 2d and 3d line of sight.
 
 - [Godot - Line of Sight](#godot---line-of-sight)
   - [Table of Contents](#table-of-contents)
-  - [(Just me) Notes](#just-me-notes)
   - [Installation](#installation)
+    - [Building from source](#building-from-source)
   - [Usage](#usage)
+    - [Demo](#demo)
   - [License](#license)
-
-## (Just me) Notes
-
-```bash
-mkdir gdextension_line_of_sight
-cd gdextension_line_of_sight
-git init
-git submodule add -b 4.2 https://github.com/godotengine/godot-cpp
-cd godot-cpp
-git submodule update --init
-```
 
 ## Installation
 
 Either copy the .gdextension file to your project, or build the extension from source?
 
+### Building from source
+
+```bash
+scons platform=windows -j4
+```
+
 ## Usage
 
 This plugins provides a `LineOfSight2D` and `LineOfSight3D` node.
+
+### Demo
+
+You can find a 2D and 3D demo in the `demo` folder.
 
 ## License
 
