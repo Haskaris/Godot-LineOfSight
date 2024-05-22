@@ -1,6 +1,6 @@
 #include "register_types.h"
 
-#include "lineofsight.h"
+#include "lineofsight2d.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -8,7 +8,7 @@
 
 using namespace godot;
 
-void initialize_example_module(ModuleInitializationLevel p_level) {
+void initialize_line_of_sight_module(ModuleInitializationLevel p_level) {
   if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
     return;
   }
@@ -16,7 +16,7 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
   ClassDB::register_class<LineOfSight2D>();
 }
 
-void uninitialize_example_module(ModuleInitializationLevel p_level) {
+void uninitialize_line_of_sight_module(ModuleInitializationLevel p_level) {
   if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
     return;
   }
@@ -30,8 +30,8 @@ GDExtensionBool GDE_EXPORT lineofsight_library_init(
 ) {
   godot::GDExtensionBinding::InitObject init_obj(p_get_proc_address, p_library, r_initialization);
 
-  init_obj.register_initializer(initialize_example_module);
-  init_obj.register_terminator(uninitialize_example_module);
+  init_obj.register_initializer(initialize_line_of_sight_module);
+  init_obj.register_terminator(uninitialize_line_of_sight_module);
   init_obj.set_minimum_library_initialization_level(MODULE_INITIALIZATION_LEVEL_SCENE);
 
   return init_obj.init();

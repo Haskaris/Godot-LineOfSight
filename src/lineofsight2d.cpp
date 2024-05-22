@@ -1,4 +1,5 @@
-#include "lineofsight.h"
+#include "lineofsight2d.h"
+
 #include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/core/class_db.hpp>
 

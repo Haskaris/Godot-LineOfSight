@@ -5,7 +5,7 @@
 
 using namespace godot;
 
-void initialize_example_module(ModuleInitializationLevel p_level);
-void uninitialize_example_module(ModuleInitializationLevel p_level);
+void initialize_line_of_sight_module(ModuleInitializationLevel p_level);
+void uninitialize_line_of_sight_module(ModuleInitializationLevel p_level);
 
 #endif  // LINEOFSIGHT_REGISTER_TYPES_H
